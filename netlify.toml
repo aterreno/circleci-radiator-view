@@ -4,3 +4,6 @@
   publish = "dist"
 
 [dev]
+
+[[plugins]]
+    package = "@netlify/plugin-functions-install-core"
