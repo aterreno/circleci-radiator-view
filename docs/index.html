@@ -1,11 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <head>
   <title>CI radiator view</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="styles.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
   <script src="backends.js"></script>
 </head>
@@ -21,34 +21,33 @@
     </form>
   </div>
 
-  <ul id="radiator" class="fill-height-or-more">
-  </ul>
+  <ul id="radiator" class="fill-height-or-more"></ul>
   <h1 id="error"></h1>
 
   <script>
-    var updateInterval = 20 * 1000
+    const updateInterval = 20 * 1000
     const queryParams = new URLSearchParams(window.location.search)
     let settings = Array.from(queryParams.entries()).reduce(
       (acc, [queryParamName, queryParamValue]) => {
         acc[queryParamName] = queryParamValue
         return acc
       },
-      {},
+      {}
     )
     settings = extendWithDefaults(settings)
 
-    var radiator = document.getElementById('radiator')
-    var error = document.getElementById('error')
+    const radiator = document.getElementById('radiator')
+    const error = document.getElementById('error')
 
     function createJob(build) {
-      var name = `${build.repository}: ${decodeURIComponent(build.branch)}`
-      var time = new Date(build.started)
+      const name = `${build.repository}: ${decodeURIComponent(build.branch)}`
+      const time = new Date(build.started)
 
-      var listItem = document.createElement('li')
-      var header = document.createElement('h1')
-      var description = document.createElement('time')
-      var author = document.createElement('div')
-      var authorName = ''
+      const listItem = document.createElement('li')
+      const header = document.createElement('h4')
+      const description = document.createElement('time')
+      const author = document.createElement('div')
+      const authorName = ''
       if (build.commit && build.commit.author) {
         authorName = build.commit.author
       }
@@ -67,12 +66,15 @@
     }
 
     function calculateColumns(data) {
-      var builds = data.length
+      const builds = data.length
       return Math.min(5, Math.ceil(builds / 5))
     }
 
     function setRadiatorColumns(columns) {
-      radiator.classList.remove.apply(radiator.classList, [1, 2, 3, 4, 5, 6].map(n => 'split-' + n))
+      radiator.classList.remove.apply(
+        radiator.classList,
+        [1, 2, 3, 4, 5, 6, 7, 8].map((n) => 'split-' + n)
+      )
       radiator.classList.add('split-' + columns)
     }
 
@@ -96,20 +98,23 @@
     }
 
     function start(settings) {
-      var backend = buildBackend(settings, createJobList) || displayError('Invalid backend ' + settings.mode)
+      const backend =
+        buildBackend(settings, createJobList) || displayError('Invalid backend ' + settings.mode)
       setInterval(backend, updateInterval)
       backend()
-      setInterval(function () { location.reload(true) }, 24 * 60 * 60 * 1000)
+      setInterval(function () {
+        location.reload(true)
+      }, 24 * 60 * 60 * 1000)
     }
 
     function extendWithDefaults(settings) {
-      var opts = backendOptions()
-      var mode = settings.mode
+      const opts = backendOptions()
+      let mode = settings.mode
       if (!opts[mode]) {
         mode = _.keys(opts)[0]
         settings.mode = mode
       }
-      var opt = opts[settings.mode]
+      const opt = opts[settings.mode]
       settings.url = opt.url || settings.url
       settings.token = opt.token || settings.token
       return settings
@@ -118,16 +123,16 @@
     if (settings && settings.mode && settings.url && settings.token) {
       start(settings)
     } else {
-      var settingsForm = document.querySelector('.settings-form')
-      var modeSelect = document.getElementById('mode')
-      var serverUrlInput = document.getElementById('serverurl')
-      var apiTokenInput = document.getElementById('apitoken')
-      var form = document.querySelector('form')
+      const settingsForm = document.querySelector('.settings-form')
+      const modeSelect = document.getElementById('mode')
+      const serverUrlInput = document.getElementById('serverurl')
+      const apiTokenInput = document.getElementById('apitoken')
+      const form = document.querySelector('form')
       settingsForm.style.display = 'block'
 
-      var defaults = backendOptions()
+      const defaults = backendOptions()
       Object.keys(defaults).forEach(function (option) {
-        var o = document.createElement("option")
+        const o = document.createElement('option')
         o.text = defaults[option].name
         o.value = option
         if (settings.mode == option) {
@@ -135,7 +140,7 @@
         }
         modeSelect.add(o)
       })
-      var setUISelections = function (mode) {
+      const setUISelections = function (mode) {
         settings.mode = mode || settings.mode
         settings = extendWithDefaults(settings)
         serverUrlInput.value = settings.url
