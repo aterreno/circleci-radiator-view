@@ -21,7 +21,7 @@ function backendOptions() {
     circle: {
       name: 'Circle CI',
       url: 'https://circleci.com/api/v1.1/projects',
-      token: process.env.CIRCLE_CI_TOKEN,
+      token: CIRCLE_CI_TOKEN,
     },
   }
 }
