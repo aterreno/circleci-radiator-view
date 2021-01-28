@@ -77,7 +77,20 @@ const circleBackend = (settings, resultCallback) => {
               }
               const buildIsRunning = branch.running_builds.length != 0
               const build = buildIsRunning ? branch.running_builds[0] : branch.recent_builds[0]
-              let status = buildIsRunning ? build.status : build.outcome
+              if (!build) {
+                return {
+                  repository: repository.reponame,
+                  branch: branchName,
+                  started: new Date("1970"),
+                  state: "N/A",
+                  commit: {
+                    created: new Date("1970"),
+                    author: null,
+                    hash: "N/A",
+                  },
+                }
+              }
+              let status =  buildIsRunning ? build.status : build.outcome
               if (branch.is_using_workflows) {
                 const workflowValues = Object.values(branch.latest_workflows)
                 latestCreatedAtTime = findLatestCreatedAtTime(workflowValues)
